@@ -20,6 +20,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/version.h>
+#include <drm/drm_edid.h>
 #include "nvidia-drm-conftest.h" /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
 
 #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
@@ -98,6 +100,7 @@ __nv_drm_detect_encoder(struct NvKmsKapiDynamicDisplayParams *pDetectParams,
             break;
     }
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 2, 0))
     if (connector->override_edid) {
         const struct drm_property_blob *edid = connector->edid_blob_ptr;
 
@@ -110,6 +113,24 @@ __nv_drm_detect_encoder(struct NvKmsKapiDynamicDisplayParams *pDetectParams,
                     sizeof(pDetectParams->edid.buffer));
         }
     }
+#else
+    // Rel. commit "drm/edid: detach debugfs EDID override from EDID property update" (Jani Nikula, 24 Oct 2022)
+    // NOTE: HUGE HACK!
+    mutex_lock(&connector->edid_override_mutex);
+    if (connector->edid_override) {
+        const struct edid *edid = drm_edid_raw(connector->edid_override);
+        size_t edid_length = EDID_LENGTH * (edid->extensions + 1);
+        if (edid_length <= sizeof(pDetectParams->edid.buffer)) {
+            memcpy(pDetectParams->edid.buffer, edid, edid_length);
+            pDetectParams->edid.bufferSize = edid_length;
+            pDetectParams->overrideEdid = NV_TRUE;
+        } else {
+            WARN_ON(edid_length >
+                    sizeof(pDetectParams->edid.buffer));
+        }
+    }
+    mutex_unlock(&connector->edid_override_mutex);
+#endif
 
     if (!nvKms->getDynamicDisplayInfo(nv_dev->pDevice, pDetectParams)) {
         NV_DRM_DEV_LOG_ERR(

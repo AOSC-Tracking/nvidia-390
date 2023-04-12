@@ -20,6 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/version.h>
 #include "nvidia-drm-conftest.h" /* NV_DRM_AVAILABLE and NV_DRM_DRM_GEM_H_PRESENT */
 
 #include "nvidia-drm-priv.h"
@@ -239,9 +240,12 @@ nv_drm_init_mode_config(struct nv_drm_device *nv_dev,
     dev->mode_config.preferred_depth = 24;
     dev->mode_config.prefer_shadow = 1;
 
+// Rel. commit "drm: Remove drm_mode_config::fb_base" (Zack Rusin, 18 Oct 2022)
+#if defined(CONFIG_FB) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 2, 0))
     /* Currently unused. Update when needed. */
 
     dev->mode_config.fb_base = 0;
+#endif
 
     dev->mode_config.async_page_flip = false;
 

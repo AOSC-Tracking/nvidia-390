@@ -8,6 +8,7 @@
  * _NVRM_COPYRIGHT_END_
  */
 
+#include <linux/version.h>
 #define  __NO_VERSION__
 
 #include "nv-misc.h"
@@ -23,10 +24,15 @@ static NV_STATUS   nv_acpi_extract_object  (const union acpi_object *, void *, N
 
 static int         nv_acpi_add             (struct acpi_device *);
 
+// Rel. commit "ACPI: make remove callback of ACPI driver void" (Dawei Li, 14 Nov 2022)
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 2, 0))
+static void        nv_acpi_remove_one_arg_void(struct acpi_device *device);
+#else
 #if !defined(NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT) || (NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT == 2)
 static int         nv_acpi_remove_two_args(struct acpi_device *device, int type);
 #else
 static int         nv_acpi_remove_one_arg(struct acpi_device *device);
+#endif
 #endif
 
 static void        nv_acpi_event           (acpi_handle, u32, void *);
@@ -73,10 +79,15 @@ static const struct acpi_driver nv_acpi_driver_template = {
 #endif
     .ops = {
         .add = nv_acpi_add,
+// Rel. commit "ACPI: make remove callback of ACPI driver void" (Dawei Li, 14 Nov 2022)
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 2, 0))
+        .remove = nv_acpi_remove_one_arg_void,
+#else
 #if !defined(NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT) || (NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT == 2)
         .remove = nv_acpi_remove_two_args,
 #else
         .remove = nv_acpi_remove_one_arg,
+#endif
 #endif
 #if defined(NV_ACPI_DEVICE_OPS_HAS_MATCH)
         .match = nv_acpi_match,
@@ -331,10 +342,15 @@ static int nv_acpi_add(struct acpi_device *device)
     return 0;
 }
 
+// Rel. commit "ACPI: make remove callback of ACPI driver void" (Dawei Li, 14 Nov 2022)
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 2, 0))
+static void nv_acpi_remove_one_arg_void(struct acpi_device *device)
+#else
 #if !defined(NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT) || (NV_ACPI_DEVICE_OPS_REMOVE_ARGUMENT_COUNT == 2)
 static int nv_acpi_remove_two_args(struct acpi_device *device, int type)
 #else
 static int nv_acpi_remove_one_arg(struct acpi_device *device)
+#endif
 #endif
 {
     /*
@@ -385,7 +401,10 @@ static int nv_acpi_remove_one_arg(struct acpi_device *device)
         device->driver_data = NULL;
     }
 
+// Rel. commit "ACPI: make remove callback of ACPI driver void" (Dawei Li, 14 Nov 2022)
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 2, 0))
     return status;
+#endif
 }
 
 static void nv_acpi_event(acpi_handle handle, u32 event_type, void *data)

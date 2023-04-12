@@ -31,6 +31,7 @@
 #include "nvidia-drm-gem.h"
 
 #include <drm/drm_crtc_helper.h>
+#include <drm/drm_modeset_helper.h>
 
 static void nv_drm_framebuffer_destroy(struct drm_framebuffer *fb)
 {
