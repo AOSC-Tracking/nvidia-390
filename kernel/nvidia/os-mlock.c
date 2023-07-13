@@ -127,8 +127,13 @@ NV_STATUS NV_API_CALL os_lock_user_pages(
     }
 
     nv_mmap_read_lock(mm);
+#if defined(NV_GET_USER_PAGES_DROPPED_VMA)
+    ret = NV_GET_USER_PAGES((unsigned long)address,
+                            page_count, write, force, user_pages);
+#else
     ret = NV_GET_USER_PAGES((unsigned long)address,
                             page_count, write, force, user_pages, NULL);
+#endif
     nv_mmap_read_unlock(mm);
     pinned = ret;
 

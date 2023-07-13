@@ -115,8 +115,13 @@ int nv_drm_lock_user_pages(unsigned long address,
 
     nv_mmap_read_lock(mm);
 
+#if defined(NV_GET_USER_PAGES_DROPPED_VMA)
+    pages_pinned = NV_GET_USER_PAGES(address, pages_count, write, force,
+		                     user_pages);
+#else
     pages_pinned = NV_GET_USER_PAGES(address, pages_count, write, force,
                                      user_pages, NULL);
+#endif
     nv_mmap_read_unlock(mm);
 
     if (pages_pinned < 0 || (unsigned)pages_pinned < pages_count) {

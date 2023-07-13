@@ -77,24 +77,44 @@ typedef int vm_fault_t;
     #if defined(NV_GET_USER_PAGES_HAS_WRITE_AND_FORCE_ARGS)
         #define NV_GET_USER_PAGES get_user_pages
     #else
-        #include <linux/mm.h>
+	#if defined(NV_GET_USER_PAGES_DROPPED_VMA)
+            #include <linux/mm.h>
 
-        static inline long NV_GET_USER_PAGES(unsigned long start,
-                                             unsigned long nr_pages,
-                                             int write,
-                                             int force,
-                                             struct page **pages,
-                                             struct vm_area_struct **vmas)
-        {
-            unsigned int flags = 0;
+            static inline long NV_GET_USER_PAGES(unsigned long start,
+                                                 unsigned long nr_pages,
+                                                 int write,
+                                                 int force,
+                                                 struct page **pages)
+            {
+                unsigned int flags = 0;
 
-            if (write)
-                flags |= FOLL_WRITE;
-            if (force)
-                flags |= FOLL_FORCE;
+                if (write)
+                    flags |= FOLL_WRITE;
+                if (force)
+                    flags |= FOLL_FORCE;
 
-            return get_user_pages(start, nr_pages, flags, pages, vmas);
-        }
+                return get_user_pages(start, nr_pages, flags, pages);
+            }
+	#else
+            #include <linux/mm.h>
+
+            static inline long NV_GET_USER_PAGES(unsigned long start,
+                                                 unsigned long nr_pages,
+                                                 int write,
+                                                 int force,
+                                                 struct page **pages,
+                                                 struct vm_area_struct **vmas)
+            {
+                unsigned int flags = 0;
+
+                if (write)
+                    flags |= FOLL_WRITE;
+                if (force)
+                    flags |= FOLL_FORCE;
+
+                return get_user_pages(start, nr_pages, flags, pages, vmas);
+            }
+	#endif
     #endif
 #endif
 

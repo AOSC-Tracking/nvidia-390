@@ -3056,7 +3056,6 @@ compile_test() {
             # write and force parameters AND that gup has task_struct and
             # mm_struct as its first arguments.
             # Return if available.
-            # Fall through to default case if absent.
 
             echo "$CONFTEST_PREAMBLE
             #include <linux/mm.h>
@@ -3079,6 +3078,31 @@ compile_test() {
                 rm -f conftest$$.o
                 return
             fi
+
+            # Conftest #4: check if vma arg was dropped
+            # Return if available.
+            # Fall through to default case if absent.
+
+            echo "$CONFTEST_PREAMBLE
+            #include <linux/mm.h>
+            long get_user_pages(unsigned long start,
+                                unsigned long nr_pages,
+                                unsigned int gup_flags,
+                                struct page **pages) {
+                return 0;
+            }" > conftest$$.c
+
+            $CC $CFLAGS -c conftest$$.c > /dev/null 2>&1
+            rm -f conftest$$.c
+
+            if [ -f conftest$$.o ]; then
+                echo "#define NV_GET_USER_PAGES_DROPPED_VMA" | append_conftest "functions"
+                echo "#undef NV_GET_USER_PAGES_HAS_WRITE_AND_FORCE_ARGS" | append_conftest "functions"
+                echo "#undef NV_GET_USER_PAGES_HAS_TASK_STRUCT" | append_conftest "functions"
+                 rm -f conftest$$.o
+                return
+            fi
+
 
             echo "#define NV_GET_USER_PAGES_HAS_WRITE_AND_FORCE_ARGS" | append_conftest "functions"
             echo "#define NV_GET_USER_PAGES_HAS_TASK_STRUCT" | append_conftest "functions"
