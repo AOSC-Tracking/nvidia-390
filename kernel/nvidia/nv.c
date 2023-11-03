@@ -776,6 +776,13 @@ int __init nvidia_init_module(void)
     nv_state_t *nv = NV_STATE_PTR(&nv_ctl_device);
     nvidia_stack_t *sp = NULL;
 
+#ifdef CONFIG_X86_KERNEL_IBT
+    if (cpu_feature_enabled(X86_FEATURE_IBT)) {
+        printk(KERN_ERR "NVRM: This NVIDIA driver version is incompatible with IBT. Try booting with ibt=off.");
+        return -EINVAL;
+    }
+#endif
+
     if (nv_multiple_kernel_modules)
     {
         nv_printf(NV_DBG_INFO, "NVRM: nvidia module instance %d\n",

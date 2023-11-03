@@ -1205,6 +1205,13 @@ static int __init nvkms_init(void)
 {
     int ret;
 
+#ifdef CONFIG_X86_KERNEL_IBT
+    if (cpu_feature_enabled(X86_FEATURE_IBT)) {
+        printk(KERN_ERR NVKMS_LOG_PREFIX "This NVIDIA driver version is incompatible with IBT. Try booting with ibt=off.");
+        return -EINVAL;
+    }
+#endif
+
     ret = nvkms_alloc_rm();
 
     if (ret != 0) {
