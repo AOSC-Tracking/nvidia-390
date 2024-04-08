@@ -221,7 +221,7 @@ void nv_destroy_dma_map_scatterlist(nv_dma_map_t *dma_map)
     os_free_mem(dma_map->mapping.discontig.submaps);
 }
 
-void nv_load_dma_map_scatterlist(
+static void nv_load_dma_map_scatterlist(
     nv_dma_map_t *dma_map,
     NvU64 *va_array
 )
