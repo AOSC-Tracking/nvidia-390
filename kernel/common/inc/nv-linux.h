@@ -1298,8 +1298,10 @@ static inline NvBool nv_is_dma_direct(struct device *dev)
     NvBool is_direct = NV_FALSE;
 
 #if defined(NV_DMA_IS_DIRECT_PRESENT)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 8, 0)
     if (dma_is_direct(get_dma_ops(dev)))
         is_direct = NV_TRUE;
+#endif
 #endif
 
     return is_direct;
