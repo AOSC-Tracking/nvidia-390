@@ -565,7 +565,11 @@ static inline void *nv_ioremap(NvU64 phys, NvU64 size)
 static inline void *nv_ioremap_nocache(NvU64 phys, NvU64 size)
 {
 #if defined(NV_IOREMAP_NOCACHE_PRESENT)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0)
     void *ptr = ioremap_nocache(phys, size);
+#else
+    void *ptr = ioremap(phys, size);
+#endif
 #else
     void *ptr = ioremap(phys, size);
 #endif
