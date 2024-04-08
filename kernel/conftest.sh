@@ -2792,7 +2792,12 @@ compile_test() {
             #    2014-07-07  743162013d40ca612b4cb53d3a200dff2d9ab26e
             #
             echo "$CONFTEST_PREAMBLE
+            #include <linux/version.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 8, 0)
             #include <linux/wait.h>
+#else
+            #include <linux/wait_bit.h>
+#endif
             void conftest_wait_on_bit_lock(void) {
                 wait_on_bit_lock(NULL, 0, 0);
             }" > conftest$$.c
@@ -2807,7 +2812,12 @@ compile_test() {
             fi
 
             echo "$CONFTEST_PREAMBLE
+            #include <linux/version.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 8, 0)
             #include <linux/wait.h>
+#else
+            #include <linux/wait_bit.h>
+#endif
             void conftest_wait_on_bit_lock(void) {
                 wait_on_bit_lock(NULL, 0, NULL, 0);
             }" > conftest$$.c
