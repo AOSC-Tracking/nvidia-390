@@ -660,13 +660,21 @@ compile_test() {
             # Determine if the follow_pfn() function is
             # present.
             #
-            CODE="
+            # follow_pfn() was added by commit 3b6748e2dd69
+            # ("mm: introduce follow_pfn()") in v2.6.31-rc1, and removed
+            # by commit 233eb0bf3b94 ("mm: remove follow_pfn")
+            # from linux-next 233eb0bf3b94.
+            #
+            # Undefined for rpmfusion for fc40
+            #
+            #CODE="
             #include <linux/mm.h>
-            void conftest_follow_pfn(void) {
-                follow_pfn();
-            }"
+            #void conftest_follow_pfn(void) {
+            #    follow_pfn();
+            #}"
 
-            compile_check_conftest "$CODE" "NV_FOLLOW_PFN_PRESENT" "" "functions"
+            #compile_check_conftest "$CODE" "NV_FOLLOW_PFN_PRESENT" "" "functions"
+            echo "#undef NV_FOLLOW_PFN_PRESENT" | append_conftest "functions"
         ;;
 
         i2c_adapter)
