@@ -76,7 +76,7 @@ struct uvm_page_directory_struct
 
     // pointers to child directories on the host.
     // this array is variable length, so it needs to be last to allow it to take up extra space
-    uvm_page_directory_t *entries[0];
+    uvm_page_directory_t *entries[];
 };
 
 struct uvm_mmu_mode_hal_struct
