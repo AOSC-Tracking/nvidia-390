@@ -40,9 +40,10 @@ NVIDIA_KO = nvidia/nvidia.ko
 NVIDIA_BINARY_OBJECT := $(src)/nvidia/nv-kernel.o_binary
 NVIDIA_BINARY_OBJECT_O := nvidia/nv-kernel.o
 
-quiet_cmd_symlink = SYMLINK $@
- cmd_symlink = ln -sf $< $@
-
+# Commented for kernel >= 6.13 - see root Kbuild file - Remove will append later
+#quiet_cmd_symlink = SYMLINK $@
+# cmd_symlink = ln -sf $< $@
+#
 targets += $(NVIDIA_BINARY_OBJECT_O)
 
 $(obj)/$(NVIDIA_BINARY_OBJECT_O): $(NVIDIA_BINARY_OBJECT) FORCE
