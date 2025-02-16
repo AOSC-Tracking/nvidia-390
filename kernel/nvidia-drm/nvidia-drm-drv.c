@@ -772,7 +772,9 @@ static struct drm_driver nv_drm_driver = {
     .name                   = "nvidia-drm",
 
     .desc                   = "NVIDIA DRM driver",
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 14, 0)
     .date                   = "20160202",
+#endif
 
 #if defined(NV_DRM_DRIVER_HAS_DEVICE_LIST)
     .device_list            = LIST_HEAD_INIT(nv_drm_driver.device_list),
