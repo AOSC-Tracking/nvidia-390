@@ -3523,7 +3523,13 @@ int NV_API_CALL nv_stop_rc_timer(
 
     nv_printf(NV_DBG_INFO, "NVRM: stopping rc timer\n");
     nv->rc_timer_enabled = 0;
+// Related to commit "treewide: Switch/rename to timer_delete[_sync]()"
+// (Thomas Gleixner, 5 Apr 2025)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 15, 0)
+    timer_delete_sync(&nvl->rc_timer.kernel_timer);
+#else
     del_timer_sync(&nvl->rc_timer.kernel_timer);
+#endif
     nv_printf(NV_DBG_INFO, "NVRM: rc timer stopped\n");
 
     return 0;
