@@ -379,5 +379,6 @@ module_param(uvm_enable_builtin_tests, int, S_IRUGO);
 MODULE_PARM_DESC(uvm_enable_builtin_tests,
                  "Enable the UVM built-in tests. (This is a security risk)");
 
+MODULE_DESCRIPTION("NVIDIA GPU UVM kernel module");
 MODULE_LICENSE("MIT");
 MODULE_INFO(supported, "external");

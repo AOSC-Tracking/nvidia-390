@@ -189,6 +189,7 @@ static void __exit nv_linux_drm_exit(void)
 module_init(nv_linux_drm_init);
 module_exit(nv_linux_drm_exit);
 
+MODULE_DESCRIPTION("NVIDIA GPU DRM kernel module");
 #if defined(MODULE_LICENSE)
   MODULE_LICENSE("MIT");
 #endif

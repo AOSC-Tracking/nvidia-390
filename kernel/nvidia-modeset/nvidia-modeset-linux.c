@@ -1307,6 +1307,7 @@ restart:
 module_init(nvkms_init);
 module_exit(nvkms_exit);
 
+MODULE_DESCRIPTION("NVIDIA GPU modeset kernel module");
 #if defined(MODULE_LICENSE)
   MODULE_LICENSE("NVIDIA");
 #endif

@@ -171,6 +171,7 @@ static void __exit uvm_unsupported_exit(void)
 module_init(uvm_unsupported_module_init);
 module_exit(uvm_unsupported_exit);
 
+MODULE_DESCRIPTION("NVIDIA GPU unsupported UVM kernel module");
 MODULE_LICENSE("MIT");
 MODULE_INFO(supported, "external");
 
