@@ -451,7 +451,7 @@ int nvidia_mmap_helper(
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
             vma->vm_flags |= VM_MIXEDMAP;
 #else
-            vm_flags_set(vma, VM_MIXEDMAP);
+            nv_vm_flags_set(vma, VM_MIXEDMAP);
 #endif
 
             for (j = 0; j < pages; j++)
@@ -479,7 +479,7 @@ int nvidia_mmap_helper(
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
         vma->vm_flags |= VM_IO;
 #else
-        vm_flags_set(vma, VM_IO);
+        nv_vm_flags_set(vma, VM_IO);
 #endif
     }
     else
@@ -546,8 +546,8 @@ int nvidia_mmap_helper(
         vma->vm_flags |= (VM_IO | VM_LOCKED | VM_RESERVED);
         vma->vm_flags |= (VM_DONTEXPAND | VM_DONTDUMP);
 #else
-        vm_flags_set(vma, VM_IO | VM_LOCKED | VM_RESERVED);
-        vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+        nv_vm_flags_set(vma, VM_IO | VM_LOCKED | VM_RESERVED);
+        nv_vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
 #endif
     }
 
@@ -558,8 +558,8 @@ int nvidia_mmap_helper(
         vma->vm_flags &= ~VM_WRITE;
         vma->vm_flags &= ~VM_MAYWRITE;
 #else
-        vm_flags_clear(vma, VM_WRITE);
-        vm_flags_clear(vma, VM_MAYWRITE);
+        nv_vm_flags_clear(vma, VM_WRITE);
+        nv_vm_flags_clear(vma, VM_MAYWRITE);
 #endif
     }
 

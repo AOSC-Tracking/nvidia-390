@@ -661,7 +661,7 @@ static int uvm_mmap(struct file *filp, struct vm_area_struct *vma)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
     vma->vm_flags |= VM_MIXEDMAP | VM_DONTEXPAND;
 #else
-    vm_flags_set(vma, VM_MIXEDMAP | VM_DONTEXPAND);
+    nv_vm_flags_set(vma, VM_MIXEDMAP | VM_DONTEXPAND);
 #endif
 
     vma->vm_ops = &uvm_vm_ops_managed;

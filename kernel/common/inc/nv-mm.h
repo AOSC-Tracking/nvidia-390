@@ -23,6 +23,7 @@
 #ifndef __NV_MM_H__
 #define __NV_MM_H__
 
+#include <linux/version.h>
 #include "conftest.h"
 
 #if !defined(NV_VM_FAULT_T_IS_PRESENT)
@@ -200,6 +201,34 @@ static inline struct rw_semaphore *nv_mmap_get_lock(struct mm_struct *mm)
     return &mm->mmap_lock;
 #else
     return &mm->mmap_sem;
+#endif
+}
+
+static inline void nv_vm_flags_set(struct vm_area_struct *vma, vm_flags_t flags)
+{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 15, 0)
+    // Related to commit "mm: uninline the main body of vma_start_write()"
+    // (Suren Baghdasaryan, 13 Feb 2025)
+    // Since Linux 6.15, vm_flags_set and vm_flags_clear call a GPL-only symbol
+    // for locking (__vma_start_write), which can't be called from non-GPL code.
+    // However, it appears all uses on the driver are on VMAs being initially
+    // mapped and which are already locked, so we can use vm_flags_reset, which
+    // doesn't lock the VMA, but rather just asserts it is already write-locked.
+    vm_flags_reset(vma, vma->vm_flags | flags);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)
+    vm_flags_set(vma, flags);
+#endif
+}
+
+static inline void nv_vm_flags_clear(struct vm_area_struct *vma, vm_flags_t flags)
+{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 15, 0)
+    // Rel. commit "mm: uninline the main body of vma_start_write()"
+    // (Suren Baghdasaryan, 13 Feb 2025)
+    // See above
+    vm_flags_reset(vma, vma->vm_flags & ~flags);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)
+    vm_flags_clear(vma, flags);
 #endif
 }
 
