@@ -312,8 +312,15 @@ static int nv_drm_connector_get_modes(struct drm_connector *connector)
     return count;
 }
 
+// Related to commit "drm/connector: make mode_valid take a const struct
+// drm_display_mode" (Dmitry Baryshkov, 14 Dec 2024)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 15, 0)
+static int nv_drm_connector_mode_valid(struct drm_connector    *connector,
+                                       const struct drm_display_mode *mode)
+#else
 static int nv_drm_connector_mode_valid(struct drm_connector    *connector,
                                        struct drm_display_mode *mode)
+#endif
 {
     struct drm_device *dev = connector->dev;
     struct nv_drm_device *nv_dev = to_nv_device(dev);
