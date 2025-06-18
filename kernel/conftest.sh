@@ -151,7 +151,7 @@ test_headers() {
 }
 
 build_cflags() {
-    BASE_CFLAGS="-O2 -D__KERNEL__ \
+    BASE_CFLAGS="-std=gnu17 -O2 -D__KERNEL__ \
 -DKBUILD_BASENAME=\"#conftest$$\" -DKBUILD_MODNAME=\"#conftest$$\" \
 -nostdinc -isystem $ISYSTEM"
        if [ "x${RPM_CFLAGS}" != "x" ] ; then

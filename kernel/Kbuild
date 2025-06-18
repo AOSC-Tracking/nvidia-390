@@ -72,6 +72,7 @@ $(foreach _module, $(NV_KERNEL_MODULES), \
 # Define ccflags-y that apply to all the NVIDIA kernel modules.
 #
 
+ccflags-y += -std=gnu17
 ccflags-y += -I$(src)/common/inc
 ccflags-y += -I$(src)
 ccflags-y += -Wall -MD $(DEFINES) $(INCLUDES) -Wsign-compare -Wno-cast-qual -Wno-error
