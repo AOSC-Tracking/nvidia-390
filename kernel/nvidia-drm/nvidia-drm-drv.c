@@ -139,6 +139,15 @@ static void nv_drm_output_poll_changed(struct drm_device *dev)
 static struct drm_framebuffer *nv_drm_framebuffer_create(
     struct drm_device *dev,
     struct drm_file *file,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0)
+    // Added by commit 81112eaac559ccd451b3dce3bbb64d6b69083961
+    // "drm: Pass the format info to .fb_create()" in kernel 6.17 -
+    // Ville Syrjälä, 1 Jul 2025.
+    // Pass along the format information from the top to .fb_create()
+    // so that we can avoid redundant (and somewhat expensive) lookups
+    // in the drivers.
+    const struct drm_format_info *info,
+#endif
     #if defined(NV_DRM_HELPER_MODE_FILL_FB_STRUCT_HAS_CONST_MODE_CMD_ARG)
     const struct drm_mode_fb_cmd2 *cmd
     #else
