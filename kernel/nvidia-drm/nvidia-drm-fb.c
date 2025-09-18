@@ -32,6 +32,7 @@
 
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_modeset_helper.h>
+#include <linux/version.h>
 
 static void nv_drm_framebuffer_destroy(struct drm_framebuffer *fb)
 {
@@ -157,6 +158,20 @@ static int nv_drm_framebuffer_init(
 struct drm_framebuffer *nv_drm_internal_framebuffer_create(
     struct drm_device *dev,
     struct drm_file *file,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0)
+    // Added by commit a34cc7bf1034280904f9683e260f9d9e9fd4b84f
+    // "drm: Allow the caller to pass in the format info to
+    // drm_helper_mode_fill_fb_struct()" in kernel 6.17 - Ville Syrjälä,
+    // 1 Jul 2025.
+    // Soon all drivers should have the format info already available
+    // in the places where they call drm_helper_mode_fill_fb_struct().
+    // Allow it to be passed along into drm_helper_mode_fill_fb_struct()
+    // instead of doing yet another redundant lookup.
+    //
+    // Start by always passing in NULL and still doing the extra lookup.
+    // The actual changes to avoid the lookup will follow.
+    const struct drm_format_info *info,
+#endif
     struct drm_mode_fb_cmd2 *cmd)
 {
     struct nv_drm_framebuffer *nv_fb;
@@ -183,6 +198,20 @@ struct drm_framebuffer *nv_drm_internal_framebuffer_create(
         dev,
         #endif
         &nv_fb->base,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0)
+        // Added by commit a34cc7bf1034280904f9683e260f9d9e9fd4b84f
+        // "drm: Allow the caller to pass in the format info to
+        // drm_helper_mode_fill_fb_struct()" in kernel 6.17 - Ville Syrjälä,
+        // 1 Jul 2025.
+        // Soon all drivers should have the format info already available
+        // in the places where they call drm_helper_mode_fill_fb_struct().
+        // Allow it to be passed along into drm_helper_mode_fill_fb_struct()
+        // instead of doing yet another redundant lookup.
+        //
+        // Start by always passing in NULL and still doing the extra lookup.
+        // The actual changes to avoid the lookup will follow.
+        info,
+#endif
         cmd);
 
     /*

@@ -163,6 +163,20 @@ static struct drm_framebuffer *nv_drm_framebuffer_create(
     fb = nv_drm_internal_framebuffer_create(
             dev,
             file,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0)
+            // Added by commit a34cc7bf1034280904f9683e260f9d9e9fd4b84f
+            // "drm: Allow the caller to pass in the format info to
+            // drm_helper_mode_fill_fb_struct()" in kernel 6.17 - Ville Syrjälä,
+            // 1 Jul 2025.
+            // Soon all drivers should have the format info already available
+            // in the places where they call drm_helper_mode_fill_fb_struct().
+            // Allow it to be passed along into drm_helper_mode_fill_fb_struct()
+            // instead of doing yet another redundant lookup.
+            //
+            // Start by always passing in NULL and still doing the extra lookup.
+            // The actual changes to avoid the lookup will follow.
+            info,
+#endif
             &local_cmd);
 
     #if !defined(NV_DRM_HELPER_MODE_FILL_FB_STRUCT_HAS_CONST_MODE_CMD_ARG)
