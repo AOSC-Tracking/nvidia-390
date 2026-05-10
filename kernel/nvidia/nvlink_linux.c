@@ -31,6 +31,11 @@
 #include "nv-procfs.h"
 #include "nv-time.h"
 #include "nvlink_proto.h"
+#include <linux/version.h>
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+#include <linux/hardirq.h>
+#endif
 
 #define MAX_ERROR_STRING           512
 
@@ -571,7 +576,11 @@ void NVLINK_API_CALL nvlink_sleep(unsigned int ms)
 
     nv_gettimeofday(&tm_aux);
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    if (in_hardirq() && (ms > NV_MAX_ISR_DELAY_MS))
+#else
     if (in_irq() && (ms > NV_MAX_ISR_DELAY_MS))
+#endif
     {
         return;
     }

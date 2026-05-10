@@ -17,6 +17,11 @@
 #include "nv-time.h"
 #include "nv-gpu-numa.h"
 
+#include <linux/version.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+#include <linux/hardirq.h>
+#endif
+
 #define MAX_ERROR_STRING 512
 static char nv_error_string[MAX_ERROR_STRING];
 nv_spinlock_t nv_error_string_lock;
@@ -193,7 +198,11 @@ BOOL NV_API_CALL os_semaphore_may_sleep(void)
 
 BOOL NV_API_CALL os_is_isr(void)
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    return (in_hardirq());
+#else
     return (in_irq());
+#endif
 }
 
 // return TRUE if the caller is the super-user
@@ -510,7 +519,11 @@ NV_STATUS NV_API_CALL os_delay_us(NvU32 MicroSeconds)
     nv_gettimeofday(&tm1);
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    if (in_hardirq() && (MicroSeconds > NV_MAX_ISR_DELAY_US))
+#else
     if (in_irq() && (MicroSeconds > NV_MAX_ISR_DELAY_US))
+#endif
         return NV_ERR_GENERIC;
     
     mdelay_safe_msec = MicroSeconds / 1000;
@@ -555,7 +568,11 @@ NV_STATUS NV_API_CALL os_delay(NvU32 MilliSeconds)
     tm_start = tm_aux;
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    if (in_hardirq() && (MilliSeconds > NV_MAX_ISR_DELAY_MS))
+#else
     if (in_irq() && (MilliSeconds > NV_MAX_ISR_DELAY_MS))
+#endif
         return NV_ERR_GENERIC;
 
     if (!NV_MAY_SLEEP()) 
