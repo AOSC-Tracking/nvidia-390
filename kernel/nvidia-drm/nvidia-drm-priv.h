@@ -39,6 +39,9 @@
 #include <drm/drm_gem.h>
 #endif
 
+// Rel. commit "drm/mm: replace drm_print.h include with a forward declaration" (Jani Nikula, 29 Oct 2025)
+#include <drm/drm_print.h>
+
 #include "nvidia-drm-os-interface.h"
 
 #include "nvkms-kapi.h"
