@@ -1133,7 +1133,14 @@ static inline void nv_kmem_ctor_dummy(void *arg)
 {
     (void)arg;
 }
+/* Beginning with kernel 6.18 flushing system-wide workqueues was
+ * removed.
+*/
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+#define NV_KMEM_CACHE_DESTROY_FLUSH ((void)0)
+#else
 #define NV_KMEM_CACHE_DESTROY_FLUSH flush_scheduled_work
+#endif
 #else
 #define nv_kmem_ctor_dummy NULL
 #define NV_KMEM_CACHE_DESTROY_FLUSH()
@@ -1530,8 +1537,13 @@ typedef struct nv_work_s {
 } nv_work_t;
 
 #define NV_WORKQUEUE_SCHEDULE(work) schedule_work(work)
+// Remove system-wide workqueue flush
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 18, 0)
+#define NV_WORKQUEUE_FLUSH() do { } while (0)
+#else
 #define NV_WORKQUEUE_FLUSH()                           \
     flush_scheduled_work();
+#endif
 #if (NV_INIT_WORK_ARGUMENT_COUNT == 2)
 #define NV_WORKQUEUE_INIT(tq,handler,data)             \
     {                                                  \

@@ -21,6 +21,7 @@
  */
 
 #include "nvidia-drm-conftest.h"
+#include <linux/version.h>
 
 #if defined(NV_DRM_AVAILABLE)
 
@@ -322,7 +323,9 @@ static void __nv_drm_fence_context_destroy(
 
     /* Wait for all its already schedule callbacks to complete. */
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 18, 0)
     flush_scheduled_work();
+#endif
 
     /* Free nvkms resources */
 
