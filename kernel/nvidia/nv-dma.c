@@ -13,6 +13,7 @@
 
 #include "os-interface.h"
 #include "nv-linux.h"
+#include <linux/version.h>
 
 NV_STATUS   nv_create_dma_map_scatterlist (nv_dma_map_t *dma_map);
 void        nv_destroy_dma_map_scatterlist(nv_dma_map_t *dma_map);
@@ -619,7 +620,13 @@ static NvBool nv_dma_is_map_resource_implemented
 #endif
     }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    // Rel. commit "dma-mapping: remove unused mapping resource callbacks" (Leon Romanovsky, 15 Oct 2025)
+    // https://lore.kernel.org/all/20251015-remove-map-page-v5-0-3bbfe3a25cdf@kernel.org/
+    return (ops->map_phys != NULL);
+#else
     return (ops->map_resource != NULL);
+#endif
 #else
     return NV_FALSE;
 #endif
