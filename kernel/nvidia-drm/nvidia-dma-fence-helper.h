@@ -24,6 +24,7 @@
 #define __NVIDIA_DMA_FENCE_HELPER_H__
 
 #include "nvidia-drm-conftest.h"
+#include <linux/version.h>
 
 #if defined(NV_DRM_FENCE_AVAILABLE)
 
@@ -89,11 +90,24 @@ nv_dma_fence_default_wait(nv_dma_fence_t *fence,
 #endif
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
+// Rel. commit "dma-buf/dma-fence: Remove return code of signaling-functions" (Philipp Stanner, 1 Dec 2025)
+static inline void nv_dma_fence_signal(nv_dma_fence_t *fence) {
+#else
 static inline int nv_dma_fence_signal(nv_dma_fence_t *fence) {
+#endif
 #if defined(NV_LINUX_FENCE_H_PRESENT)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
+    fence_signal(fence);
+#else
     return fence_signal(fence);
+#endif
+#else
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
+    dma_fence_signal(fence);
 #else
     return dma_fence_signal(fence);
+#endif
 #endif
 }
 

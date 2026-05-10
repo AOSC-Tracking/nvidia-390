@@ -1141,6 +1141,13 @@ void NV_API_CALL os_get_screen_info(
 )
 {
 #if (defined(NVCPU_X86) || defined(NVCPU_X86_64))
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
+    // Rel. commit "sysfb: Replace screen_info with sysfb_primary_display" (Thomas Zimmermann, 26 Nov 2025)
+    const struct screen_info *si = &sysfb_primary_display.screen;
+#else
+    const struct screen_info *si = &screen_info;
+#endif
+
     //
     // If there is not a framebuffer console, return 0 size.
     //
@@ -1148,21 +1155,21 @@ void NV_API_CALL os_get_screen_info(
     // initialization, and then will be set to a value, such as
     // VIDEO_TYPE_VLFB or VIDEO_TYPE_EFI if an fbdev console is used.
     //
-    if (screen_info.orig_video_isVGA <= 1)
+    if (si->orig_video_isVGA <= 1)
     {
         *pPhysicalAddress = 0;
         *pFbWidth = *pFbHeight = *pFbDepth = *pFbPitch = 0;
         return;
     }
 
-    *pPhysicalAddress = screen_info.lfb_base;
+    *pPhysicalAddress = si->lfb_base;
 #if defined(VIDEO_CAPABILITY_64BIT_BASE)
-    *pPhysicalAddress |= (NvU64)screen_info.ext_lfb_base << 32;
+    *pPhysicalAddress |= (NvU64)si->ext_lfb_base << 32;
 #endif
-    *pFbWidth = screen_info.lfb_width;
-    *pFbHeight = screen_info.lfb_height;
-    *pFbDepth = screen_info.lfb_depth;
-    *pFbPitch = screen_info.lfb_linelength;
+    *pFbWidth = si->lfb_width;
+    *pFbHeight = si->lfb_height;
+    *pFbDepth = si->lfb_depth;
+    *pFbPitch = si->lfb_linelength;
 #else
     *pPhysicalAddress = 0;
     *pFbWidth = *pFbHeight = *pFbDepth = *pFbPitch = 0;

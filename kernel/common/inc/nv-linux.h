@@ -204,6 +204,9 @@ static inline uid_t __kuid_val(kuid_t uid)
 #endif
 #if defined(NV_LINUX_SCREEN_INFO_H_PRESENT)
 #include <linux/screen_info.h>      /* screen_info                      */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7, 0, 0)
+#include <linux/sysfb.h>            /* sysfb_primary_display            */
+#endif
 #else
 #include <linux/tty.h>              /* screen_info                      */
 #endif
