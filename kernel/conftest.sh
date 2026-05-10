@@ -258,6 +258,11 @@ build_cflags() {
             CFLAGS="$CFLAGS -mfentry -DCC_USING_FENTRY"
         fi
     fi
+
+    # Related to commit "Kbuild: enable -fms-extensions" (Rasmus Villemoes, 20 Oct 2025)
+    # Enable the flags since the Linux headers use those extensions in some structs
+    # See https://www.phoronix.com/news/Linux-6.19-Patch-Would-MS-Ext
+    CFLAGS="$CFLAGS -fms-extensions"
 }
 
 CONFTEST_PREAMBLE="#include \"conftest/headers.h\"
