@@ -28,6 +28,7 @@
  */
 
 #include "nvidia-drm-helper.h"
+#include <linux/version.h>
 
 #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
 
@@ -62,6 +63,7 @@ static void __nv_drm_framebuffer_put(struct drm_framebuffer *fb)
 
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 19, 0)
 /*
  * drm_atomic_helper_disable_all() has been added by commit
  * 1494276000db789c6d2acd85747be4707051c801, which is Signed-off-by:
@@ -199,4 +201,5 @@ free:
     return ret;
 }
 
+#endif /* kernel < 6.19 */
 #endif /* NV_DRM_ATOMIC_MODESET_AVAILABLE */

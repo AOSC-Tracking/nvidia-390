@@ -39,6 +39,8 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 
+#include <linux/version.h>
+
 static const u32 nv_default_supported_plane_drm_formats[] = {
     DRM_FORMAT_ARGB1555,
     DRM_FORMAT_XRGB1555,
@@ -151,7 +153,11 @@ static int nv_drm_plane_atomic_check(struct drm_plane *plane,
         goto done;
     }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    for_each_new_crtc_in_state(plane_state->state, crtc, crtc_state, i) {
+#else
     nv_drm_for_each_crtc_in_state(plane_state->state, crtc, crtc_state, i) {
+#endif
         struct nv_drm_crtc_state *nv_crtc_state = to_nv_crtc_state(crtc_state);
         struct NvKmsKapiHeadRequestedConfig *head_req_config =
             &nv_crtc_state->req_config;
@@ -368,8 +374,13 @@ static int nv_drm_crtc_atomic_check(struct drm_crtc *crtc,
 
         req_config->flags.displaysChanged = NV_TRUE;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+        for_each_new_connector_in_state(crtc_state->state,
+                                        connector, connector_state, j) {
+#else
         nv_drm_for_each_connector_in_state(crtc_state->state,
                                            connector, connector_state, j) {
+#endif
             if (connector_state->crtc != crtc) {
                 continue;
             }

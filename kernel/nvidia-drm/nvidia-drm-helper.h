@@ -24,6 +24,7 @@
 #define __NVIDIA_DRM_HELPER_H__
 
 #include "nvidia-drm-conftest.h"
+#include <linux/version.h>
 
 #if defined(NV_DRM_AVAILABLE)
 
@@ -156,6 +157,7 @@ nv_drm_prime_pages_to_sg(struct drm_device *dev,
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 19, 0)
 int nv_drm_atomic_helper_disable_all(struct drm_device *dev,
                                      struct drm_modeset_acquire_ctx *ctx);
 
@@ -277,6 +279,7 @@ int nv_drm_atomic_helper_disable_all(struct drm_device *dev,
     for_each_plane_in_state(__state, plane, plane_state, __i)
 #endif
 
+#endif /* Kernel < 6.19 */
 static inline struct drm_crtc *nv_drm_crtc_find(struct drm_device *dev,
     uint32_t id)
 {

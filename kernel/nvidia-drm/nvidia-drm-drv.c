@@ -558,13 +558,21 @@ void nv_drm_master_drop(struct drm_device *dev, struct drm_file *file_priv)
 
     drm_modeset_lock_all(dev);
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    if ((err = drm_atomic_helper_disable_all(
+#else
     if ((err = nv_drm_atomic_helper_disable_all(
+#endif
             dev,
             dev->mode_config.acquire_ctx)) != 0) {
 
         NV_DRM_DEV_LOG_ERR(
             nv_dev,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+            "drm_atomic_helper_disable_all failed with error code %d !",
+#else
             "nv_drm_atomic_helper_disable_all failed with error code %d !",
+#endif
             err);
     }
 

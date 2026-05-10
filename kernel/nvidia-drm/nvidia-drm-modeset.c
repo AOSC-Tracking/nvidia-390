@@ -21,6 +21,7 @@
  */
 
 #include "nvidia-drm-conftest.h" /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
+#include <linux/version.h>
 
 #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
 
@@ -112,12 +113,19 @@ nv_drm_atomic_apply_modeset_config(struct drm_device *dev,
     struct NvKmsKapiRequestedModeSetConfig *requested_config =
         &(to_nv_atomic_state(state)->config);
     struct drm_crtc *crtc;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+#else
     struct drm_crtc_state *crtc_state;
+#endif
     int i;
 
     memset(requested_config, 0, sizeof(*requested_config));
 
     /* Loop over affected crtcs and construct NvKmsKapiRequestedModeSetConfig */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+#else
     nv_drm_for_each_crtc_in_state(state, crtc, crtc_state, i) {
         /*
          * When commiting a state, the new state is already stored in
@@ -126,6 +134,7 @@ nv_drm_atomic_apply_modeset_config(struct drm_device *dev,
          */
         struct drm_crtc_state *new_crtc_state =
                                commit ? crtc->state : crtc_state;
+#endif
         struct nv_drm_crtc *nv_crtc = to_nv_crtc(crtc);
 
         requested_config->headRequestedConfig[nv_crtc->head] =
@@ -134,7 +143,9 @@ nv_drm_atomic_apply_modeset_config(struct drm_device *dev,
         requested_config->headsMask |= 1 << nv_crtc->head;
 
         if (commit) {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 19, 0)
             struct drm_crtc_state *old_crtc_state = crtc_state;
+#endif
             struct nv_drm_crtc_state *nv_new_crtc_state =
                 to_nv_crtc_state(new_crtc_state);
 
@@ -220,7 +231,11 @@ int nv_drm_atomic_commit(struct drm_device *dev,
 
     int i;
     struct drm_crtc *crtc = NULL;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+    struct drm_crtc_state *new_crtc_state = NULL;
+#else
     struct drm_crtc_state *crtc_state = NULL;
+#endif
     struct nv_drm_device *nv_dev = to_nv_device(dev);
 
     /*
@@ -230,7 +245,11 @@ int nv_drm_atomic_commit(struct drm_device *dev,
      * updates to complete.
      */
     if (nonblock) {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+        for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
+#else
         nv_drm_for_each_crtc_in_state(state, crtc, crtc_state, i) {
+#endif
             struct nv_drm_crtc *nv_crtc = to_nv_crtc(crtc);
 
             /*
@@ -303,7 +322,11 @@ int nv_drm_atomic_commit(struct drm_device *dev,
     }
 
     if (ret == 0 && !nonblock) {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 19, 0)
+        for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
+#else
         nv_drm_for_each_crtc_in_state(state, crtc, crtc_state, i) {
+#endif
             struct nv_drm_crtc *nv_crtc = to_nv_crtc(crtc);
 
             /*
