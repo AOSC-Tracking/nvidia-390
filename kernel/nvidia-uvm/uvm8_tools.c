@@ -33,6 +33,7 @@
 #include "uvm8_forward_decl.h"
 #include "uvm8_range_group.h"
 #include "uvm8_mem.h"
+#include "uvm8_tools_init.h"
 
 // We limit the number of times a page can be retained by the kernel
 // to prevent the user from maliciously passing UVM tools the same page
