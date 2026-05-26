@@ -13,6 +13,7 @@
 #include "nv-linux.h"
 #include "nv-frontend.h"
 #include "nv-pci-table.h"
+#include "nv-instance.h"
 
 #define MODULE_BASE_NAME "nvidia"
 #define MODULE_INSTANCE_NUMBER 0
