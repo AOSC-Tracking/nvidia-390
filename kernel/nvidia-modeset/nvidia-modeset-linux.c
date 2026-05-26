@@ -68,9 +68,9 @@
  */
 static inline unsigned long NVKMS_USECS_TO_JIFFIES(NvU64 usec)
 {
-    unsigned long result = usec * HZ;
+    unsigned long long result = usec * HZ;
     do_div(result, 1000000);
-    return result;
+    return (unsigned long)result;
 }
 
 
