@@ -221,7 +221,7 @@ static NV_STATUS service_non_replayable_fault_block_locked(uvm_gpu_t *gpu,
     // Check logical permissions
     status = uvm_va_range_check_logical_permissions(va_block->va_range,
                                                     gpu->id,
-                                                    fault_entry->fault_access_type,
+                                                    (uvm_fault_type_t)fault_entry->fault_access_type,
                                                     uvm_range_group_address_migratable(va_space,
                                                                                        fault_entry->fault_address));
     if (status != NV_OK) {
