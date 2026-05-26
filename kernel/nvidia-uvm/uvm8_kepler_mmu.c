@@ -40,6 +40,7 @@
 #include "uvm8_mmu.h"
 #include "uvm8_push_macros.h"
 #include "hwref/kepler/gk104/dev_mmu.h"
+#include "uvm8_hal.h"
 
 #define MMU_BIG 0
 #define MMU_SMALL 1
