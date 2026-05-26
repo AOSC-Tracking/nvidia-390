@@ -35,6 +35,7 @@
 #include "uvm8_procfs.h"
 #include "uvm8_perf_thrashing.h"
 #include "uvm8_gpu_non_replayable_faults.h"
+#include "uvm8_test.h"
 
 // TODO: Bug 1881601: [uvm] Add fault handling overview for replayable and
 // non-replayable faults
