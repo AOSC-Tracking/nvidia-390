@@ -154,6 +154,9 @@ build_cflags() {
     BASE_CFLAGS="-O2 -D__KERNEL__ \
 -DKBUILD_BASENAME=\"#conftest$$\" -DKBUILD_MODNAME=\"#conftest$$\" \
 -nostdinc -isystem $ISYSTEM"
+       if [ "x${RPM_CFLAGS}" != "x" ] ; then
+               BASE_CFLAGS="${BASE_CFLAGS} ${RPM_CFLAGS}"
+       fi
 
     if [ "$OUTPUT" != "$SOURCES" ]; then
         OUTPUT_CFLAGS="-I$OUTPUT/include2 -I$OUTPUT/include"
