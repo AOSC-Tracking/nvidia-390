@@ -38,6 +38,7 @@
 #include "ctrl2080mc.h"
 #include "nv-kthread-q.h"
 #include "uvm8_gpu_access_counters.h"
+#include "uvm8_test.h"
 
 int uvm8_ats_mode = 0;
 module_param(uvm8_ats_mode, int, S_IRUGO);
