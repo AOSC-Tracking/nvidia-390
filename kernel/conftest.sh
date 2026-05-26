@@ -2074,7 +2074,12 @@ compile_test() {
             # Determine if the phys_to_dma function is present.
             #
             CODE="
+            #include <linux/version.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 16, 0)
             #include <linux/dma-mapping.h>
+#else
+            #include <linux/dma-direct.h>
+#endif
             void conftest_phys_to_dma(void) {
                 phys_to_dma();
             }"

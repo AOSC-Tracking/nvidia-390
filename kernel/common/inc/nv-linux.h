@@ -174,7 +174,11 @@ static inline uid_t __kuid_val(kuid_t uid)
 
 #if defined(NV_VM_INSERT_PAGE_PRESENT)
 #include <linux/pagemap.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 16, 0)
 #include <linux/dma-mapping.h>
+#else
+#include <linux/dma-direct.h>
+#endif
 
 #if defined(NV_LINUX_DMA_MAP_OPS_H_PRESENT)
 #include <linux/dma-map-ops.h>
