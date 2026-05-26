@@ -36,6 +36,7 @@
 #include "uvm8_map_external.h"
 #include "uvm8_init.h"
 #include "nv_uvm_interface.h"
+#include "uvm8_test.h"
 
 #include <linux/sort.h>
 
