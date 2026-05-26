@@ -54,7 +54,7 @@ static NV_STATUS add_and_test(uvm_gpu_tracking_semaphore_t *tracking_sem, NvU32 
     return NV_OK;
 }
 
-NV_STATUS test_tracking(uvm_va_space_t *va_space)
+static NV_STATUS test_tracking(uvm_va_space_t *va_space)
 {
     NV_STATUS status;
     uvm_gpu_tracking_semaphore_t tracking_sem;
