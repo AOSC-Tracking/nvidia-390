@@ -225,7 +225,7 @@ done:
     return status;
 }
 
-NV_STATUS test_tracker_overwrite(uvm_va_space_t *va_space)
+static NV_STATUS test_tracker_overwrite(uvm_va_space_t *va_space)
 {
     uvm_gpu_t *gpu;
     uvm_channel_t *channel;
@@ -313,7 +313,7 @@ done:
     return status;
 }
 
-NV_STATUS test_tracker_add_tracker(uvm_va_space_t *va_space)
+static NV_STATUS test_tracker_add_tracker(uvm_va_space_t *va_space)
 {
     uvm_gpu_t *gpu;
     uvm_channel_t *channel;
