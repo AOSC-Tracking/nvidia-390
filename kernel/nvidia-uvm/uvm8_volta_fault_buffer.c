@@ -351,7 +351,7 @@ static NvU32 *get_fault_buffer_entry(uvm_gpu_t *gpu, NvU32 index)
     return fault_entry;
 }
 
-void parse_fault_entry_common(uvm_gpu_t *gpu, NvU32 *fault_entry, uvm_fault_buffer_entry_t *buffer_entry)
+static void parse_fault_entry_common(uvm_gpu_t *gpu, NvU32 *fault_entry, uvm_fault_buffer_entry_t *buffer_entry)
 {
     NV_STATUS status;
     NvU64 addr_hi, addr_lo;
