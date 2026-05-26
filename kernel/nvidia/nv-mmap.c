@@ -261,6 +261,7 @@ int nv_encode_caching(
         case NV_MEMORY_CACHED:
             if (NV_ALLOW_CACHING(memory_type))
                 break;
+            fallthrough;
         default:
             nv_printf(NV_DBG_ERRORS,
                 "NVRM: VM: cache type %d not supported for memory type %d!\n",
