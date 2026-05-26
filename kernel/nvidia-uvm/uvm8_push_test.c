@@ -355,7 +355,7 @@ done:
 //
 // Starting more than a single push is not safe to do outside of a test as if multiple threads tried doing so,
 // it could easily deadlock.
-NV_STATUS test_push_interleaving(uvm_va_space_t *va_space)
+static NV_STATUS test_push_interleaving(uvm_va_space_t *va_space)
 {
     NV_STATUS status;
     uvm_gpu_t *gpu;
@@ -584,7 +584,7 @@ typedef struct
     NvU64 timestamp;
 } timestamp_test_t;
 
-void timestamp_on_complete(void *void_data)
+static void timestamp_on_complete(void *void_data)
 {
     timestamp_test_t *data = (timestamp_test_t *)void_data;
 
