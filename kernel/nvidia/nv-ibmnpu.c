@@ -26,8 +26,8 @@
  */
 #include "nv-linux.h"
 
-#if defined(NVCPU_PPC64LE)
 #include "nv-ibmnpu.h"
+#if defined(NVCPU_PPC64LE)
 
 #include "nvlink_common.h"
 #include "nvlink_errors.h"
