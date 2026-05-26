@@ -30,6 +30,7 @@
 #include "nv-linux.h"
 #include "nv-procfs.h"
 #include "nv-time.h"
+#include "nvlink_proto.h"
 
 #define MAX_ERROR_STRING           512
 
