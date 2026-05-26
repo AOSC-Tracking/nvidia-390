@@ -1137,7 +1137,7 @@ void uvm_channel_print_pending_pushes(uvm_channel_t *channel)
     channel_print_pushes(channel, 0, NULL);
 }
 
-void uvm_channel_manager_print_pending_pushes(uvm_channel_manager_t *manager, struct seq_file *seq)
+static void uvm_channel_manager_print_pending_pushes(uvm_channel_manager_t *manager, struct seq_file *seq)
 {
     uvm_channel_t *channel;
 
