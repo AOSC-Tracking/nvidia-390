@@ -29,6 +29,7 @@
 #include "uvm8_va_range.h"
 #include "uvm8_kvmalloc.h"
 #include "uvm8_tools.h"
+#include "uvm8_test.h"
 
 // Number of bits for page-granularity time stamps. Currently we ignore the first 6 bits
 // of the timestamp (i.e. we have 64ns resolution, which is good enough)
