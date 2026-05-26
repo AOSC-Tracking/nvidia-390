@@ -38,6 +38,7 @@
 #include "uvm8_push_macros.h"
 #include "hwref/pascal/gp100/dev_fb.h"
 #include "hwref/pascal/gp100/dev_mmu.h"
+#include "uvm8_hal.h"
 
 #define MMU_BIG 0
 #define MMU_SMALL 1
