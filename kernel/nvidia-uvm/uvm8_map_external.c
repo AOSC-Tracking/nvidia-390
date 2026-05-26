@@ -275,7 +275,7 @@ static NV_STATUS copy_ptes(uvm_page_tree_t *tree,
 //
 // If the mapped range ends on va_range->node.end, a TLB invalidate for upgrade
 // is also issued.
-NV_STATUS map_rm_pt_range(uvm_va_range_t *va_range,
+static NV_STATUS map_rm_pt_range(uvm_va_range_t *va_range,
                                  uvm_page_tree_t *tree,
                                  uvm_page_table_range_t *pt_range,
                                  uvm_pte_buffer_t *pte_buffer,
