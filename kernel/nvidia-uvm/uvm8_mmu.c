@@ -695,7 +695,7 @@ NV_STATUS uvm_page_tree_wait(uvm_page_tree_t *tree)
     return status;
 }
 
-NV_STATUS try_get_ptes(uvm_page_tree_t *tree,
+static NV_STATUS try_get_ptes(uvm_page_tree_t *tree,
                        NvU32 page_size,
                        NvU64 start,
                        NvLength size,
