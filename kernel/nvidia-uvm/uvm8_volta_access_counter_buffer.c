@@ -25,6 +25,7 @@
 #include "uvm8_gpu.h"
 #include "clc365.h"
 #include "uvm8_volta_fault_buffer.h"
+#include "uvm8_hal.h"
 
 typedef struct {
     NvU8 bufferEntry[NVC365_NOTIFY_BUF_SIZE];
