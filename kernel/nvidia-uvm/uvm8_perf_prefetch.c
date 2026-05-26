@@ -28,6 +28,7 @@
 #include "uvm8_kvmalloc.h"
 #include "uvm8_va_block.h"
 #include "uvm8_va_range.h"
+#include "uvm8_test.h"
 
 // Global cache to allocate the per-VA block prefetch detection structures
 static struct kmem_cache *g_prefetch_info_cache __read_mostly;
